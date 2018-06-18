@@ -37,7 +37,7 @@ if ($user) {
 		$result=mysql_db_query($database,$sql);
 		$nRow=mysql_num_rows($result);
 		if($nRow ==0){
-				$sql ="  INSERT INTO  tbuser (firstname,lastname,facebook,idlevel,permit,updatetime) 
+				$sql ="  INSERT INTO  tbuser (firstname,lastname,facebook,idlevel,permit,updatetime)
 					VALUES
 					('".trim($user_profile["name"])."',
 					'(FB)',
@@ -81,7 +81,7 @@ if($_GET["Action"] == "Logout")
 <title><?php echo $PageTitle ?></title>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    
+
     <!-- Theme style -->
     <link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
@@ -93,7 +93,7 @@ if($_GET["Action"] == "Logout")
 		}
 ?>
 		<div class="form-box" id="login-box">
-            <div class="header" style="background-color:#CCCCCC"> <a href="http://nsp.uru.ac.th/" target="_blank"><img src='images/logo2.png' width="200" /></a> Sign In</div>
+            <div class="header" style="background-color:#CCCCCC"> <a href="http://localhost/cashew/" target="_blank"><img src='images/logo2.png' width="200" /></a> Sign In</div>
             <form action="./" method="post">
                 <div class="body bg-gray">
                 	<div  id="add_err"></div>
@@ -102,7 +102,7 @@ if($_GET["Action"] == "Logout")
                   				  </div>
                    			 		<div class="form-group">
                        				 <input type="password" id="password" name="password" class="form-control" placeholder="Password" value="demo"/>
-                    			</div>  
+                    			</div>
                     		<div class="form-group">
                                 <input name="remember_me" type="checkbox" id="remember_me" value="1"/>
                               	Remember me
@@ -110,22 +110,22 @@ if($_GET["Action"] == "Logout")
                 </div>
                 <div class="footer">
                       <div class="row">
-                    		<div class="col-md-6">                                                               
-                    <button type="submit" class="btn bg-olive btn-block" id="login">Sign me in</button>  
+                    		<div class="col-md-6">
+                    <button type="submit" class="btn bg-olive btn-block" id="login">Sign me in</button>
                                                    </div>
                     		<div class="col-md-6">
   <button type="submit" class="btn bg-olive btn-block" id="cancle">Cancel</button>
       </div>
-          </div><br />                    
+          </div><br />
                     <i class='glyphicon glyphicon-user'> </i><a href="register.php" class="text-center">Register a new membership</a>
-                    <br />  
+                    <br />
         			<i class="fa fa-facebook"> </i><a href="<?php echo $loginUrl; ?>"> Login with <div class='label label-primary'>FACEBOOK</div></a>
 
                 </div>
             </form>
 
         </div>
-		
+
 </body>
 </html>
 

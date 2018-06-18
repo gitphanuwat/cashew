@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	include('config/config.php');
-$pageName="activity";
+$pageName="innovation";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,9 +37,6 @@ $pageName="activity";
 
     <section id="services" class="service-item">
 	   <div class="container">
-            <div class="center wow fadeInDown">
-                <h2>ผลิตภัณฑ์</h2>
-            </div>
             <input type="hidden" name="idact" id="idact" value="<?php echo $_GET['id'];?>">
             <input type="hidden" name="idgrp" id="idgrp" value="<?php echo $_GET['idgroup'];?>">
              <div class="box-body table-responsive no-padding">
@@ -52,10 +49,6 @@ $pageName="activity";
         	</div>
         </div><!--/.container-->
     </section><!--/#services-->
-
-            <div class="clients-area center wow fadeInDown">
-                <h4>ผลิตภัณฑ์ของกลุ่มวิสาหกิจ</h4>
-            </div>
 <?php include("include/foot.php");?>
 
 </body>

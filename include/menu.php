@@ -58,7 +58,7 @@ if ($_SESSION["IASU_USER_PICTURE"]){
             echo "</a>";
         echo "</li>";
 		echo "<li ";
-		if($pageName=="trader"){
+		if($pageName=="innovation"){
 			echo "class='active'";
 		}
 		echo ">";
@@ -67,7 +67,7 @@ if ($_SESSION["IASU_USER_PICTURE"]){
             echo "</a>";
         echo "</li>";
 		echo "<li ";
-		if($pageName=="knowledge"){
+		if($pageName=="trader"){
 			echo "class='active'";
 		}
 		echo ">";
@@ -76,7 +76,7 @@ if ($_SESSION["IASU_USER_PICTURE"]){
             echo "</a>";
         echo "</li>";
 		echo "<li ";
-		if($pageName=="about"){
+		if($pageName=="activity"){
 			echo "class='active'";
 		}
 		echo ">";

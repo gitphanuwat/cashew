@@ -3,7 +3,8 @@
 global $Config ;
 
 //include( '../../../../../lib/config.php' );
-$config[root] = 'http://nsp.uru.ac.th/';
+//$config[root] = 'http://nsp.uru.ac.th/';
+$config[root] = 'http://localhost/cashew/';
 $config[data] = 'database/';
 
 $Config['Enabled'] = true ;

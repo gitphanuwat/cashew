@@ -73,12 +73,12 @@
                 <div class="features">
                     <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                         <div class="feature-wrap">
-                        <a href="trader.php">
+                        <a href="innovation.php">
                             <i class="fa fa-user"></i></a>
             <?php
-				$sql1="select count(*) from tbuser where idlevel = 3";
-				$result1=mysql_db_query($database,$sql1);
-				$row1=mysql_fetch_array($result1);
+						$sql1="select count(*) from tbinnovation";
+						$result1=mysql_db_query($database,$sql1);
+						$row1=mysql_fetch_array($result1);
 			?>
                             <h2>ผลิตภัฑ์(<?php echo $row1[0];?>)</h2>
                             <h3>ระบบฐานข้อมูล, รวบรวมผู้ประกอบการที่เป็นเครือข่ายความร่วมมือ</h3>
@@ -87,21 +87,22 @@
 
                     <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                         <div class="feature-wrap">
-                        <a href="innovation.php">
+                        <a href="trader.php">
                             <i class="fa fa-leaf"></i></a>
             <?php
-				$sql1="select count(*) from tbinnovation";
-				$result1=mysql_db_query($database,$sql1);
-				$row1=mysql_fetch_array($result1);
+
+										$sql1="select count(*) from tbuser where idlevel = 3";
+										$result1=mysql_db_query($database,$sql1);
+										$row1=mysql_fetch_array($result1);
 			?>
-                            <h2>เกษตรกร(<?php echo $row1[0];?>)</h2>
+                            <h2>เกษตรกร(<?php echo '17';//echo $row1[0];?>)</h2>
                             <h3>การส่งเสริมและพัฒนาทางด้านนวัตกรรมและเทคโนโลยี ในท้องถิ่นชุมชน</h3>
                         </div>
                     </div><!--/.col-md-4-->
 
                     <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                         <div class="feature-wrap">
-                        <a href="case.php">
+                        <a href="innovation.php">
                             <i class="fa fa-comments"></i></a>
             <?php
 				$sql1="select count(*) from tb_case";
@@ -116,7 +117,7 @@
                 </div><!--/.services-->
             </div><!--/.row-->
 
-            
+
 
 
 	<!-- our-team -->
@@ -147,26 +148,10 @@
 				</div>	<!--/.row-->
 	</div><!--section-->
 
-
-    <section id="portfolio">
-        <div class="container">
-
-            <div class="row">
-                        <h1 id="comments_title">ข่าวประชาสัมพันธ์</h1>
-                        <div id="shownews"></div>
-                            <div id="loadnews" align="center">
-                                <img src="img/ajax-loader.gif" align="absmiddle" />
-                            </div>
-            </div>
-        </div>
-    </section><!--/#portfolio-item-->
-
         </div><!--/.container-->
     </section><!--/#feature-->
 
 <section class="well">
-<h2 class="text-center"><a href="viewvdo.php">Video</a></h2>
-<hr>
   <div class="container">
     <div class="row">
      <div id="showvdo"></div>
@@ -178,17 +163,13 @@
 </section>
 
     <div class="get-started center wow fadeInDown">
-                <br>
-                            <div class="row">
-                                        <div id="showfeed"></div>
-                                            <div id="loadfeed" align="center">
-                                                <img src="img/ajax-loader.gif" align="absmiddle" />
-                                            </div>
-
-                            </div>
-                <div class="request">
-                    <h4><a href="viewnews.php">ข่าว& กิจกรรม &เครือข่าย</a></h4>
-                </div>
+        <div id="showfeed"></div>
+            <div id="loadfeed" align="center">
+                <img src="img/ajax-loader.gif" align="absmiddle" />
+        </div>
+        <div class="request">
+            <h4><a href="viewnews.php">ข่าว& กิจกรรม &เครือข่าย</a></h4>
+        </div>
     </div><!--/.get-started-->
 
     <section id="bottom">
@@ -259,9 +240,9 @@
 		$("#showactivity").load("index_load.php?action=loadactivity" ,function(){
             $("#loadactivity").fadeOut();
         });
-		$("#shownews").load("index_load.php?action=loadnews" ,function(){
-            $("#loadnews").fadeOut();
-        });
+		//$("#shownews").load("index_load.php?action=loadnews" ,function(){
+      //      $("#loadnews").fadeOut();
+        //});
 		$("#showvdo").load("index_load.php?action=loadvdo" ,function(){
             $("#loadvdo").fadeOut();
         });
