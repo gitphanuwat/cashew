@@ -1,0 +1,321 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * This page shows all resources available in a folder in the File Browser.
+-->
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="browser.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript">
+<!--
+var oListManager = new Object() ;
+
+oListManager.Clear = function()
+{
+	document.body.innerHTML = '' ;
+}
+
+function ProtectPath(path)
+{
+	path = path.replace( /\\/g, '\\\\') ;
+	path = path.replace( /'/g, '\\\'') ;
+	return path ;
+}
+
+oListManager.GetFolderRowHtml = function( folderName, folderPath, folderUrl )
+{
+	// Build the link to view the folder.
+	var sDir = ProtectPath( folderPath );
+	var sLink = '<a href="#" onclick="OpenFolder(\'' + sDir + '\');return false;">' ;
+
+	return '<tr>' +
+			'<td width="16">' +
+				sLink +
+				'<img alt="" src="images/folder.gif" width="16" height="16" border="0"><\/a>' +
+			'<\/td><td nowrap colspan="2">&nbsp;' +
+				sLink +
+				folderName +
+				'<\/a>' +
+		'<\/td><\/tr>' ;
+}
+
+oListManager.GetFileRowHtml = function( fileName, fileUrl, fileSize )
+{
+	// Build the link to view the folder.
+	var sFile = ProtectPath( fileUrl );
+	var sLink = '<a href="#" onclick="OpenFile(\'' + sFile + '\');return false;">' ;
+
+	// Get the file icon.
+	var sIcon = oIcons.GetIcon( fileName ) ;
+
+	return '<tr>' +
+			'<td width="16">' +
+				sLink +
+				'<img alt="" src="images/icons/' + sIcon + '.gif" width="16" height="16" border="0"></a>' +
+			'</td><td>&nbsp;' +
+				sLink +
+				fileName +
+				'</a>' +
+			'</td><td align="right" nowrap>&nbsp;' +
+				fileSize +
+				' KB' +
+		'</td></tr>' ;
+}
+
+function OpenFolder( folderPath )
+{
+	// Load the resources list for this folder.
+	window.parent.frames['frmFolders'].LoadFolders( folderPath ) ;
+}
+
+function OpenFile( fileUrl )
+{
+	window.top.opener.SetUrl( encodeURI( fileUrl ) ) ;
+	window.top.close() ;
+	window.top.opener.focus() ;
+}
+
+function LoadResources( resourceType, folderPath )
+{
+	oListManager.Clear() ;
+	oConnector.ResourceType = resourceType ;
+	oConnector.CurrentFolder = folderPath ;
+	oConnector.SendCommand( 'GetFoldersAndFiles', null, GetFoldersAndFilesCallBack ) ;
+}
+
+function Refresh()
+{
+	LoadResources( oConnector.ResourceType, oConnector.CurrentFolder ) ;
+}
+
+function GetFoldersAndFilesCallBack( fckXml )
+{
+	if ( oConnector.CheckError( fckXml ) != 0 )
+		return ;
+
+	// Get the current folder path.
+	var oFolderNode = fckXml.SelectSingleNode( 'Connector/CurrentFolder' ) ;
+	if ( oFolderNode == null )
+	{
+		alert( 'The server didn\'t reply with a proper XML data. Please check your configuration.' ) ;
+		return ;
+	}
+	var sCurrentFolderPath	= oFolderNode.attributes.getNamedItem('path').value ;
+	var sCurrentFolderUrl	= oFolderNode.attributes.getNamedItem('url').value ;
+
+	var dTimer = new Date() ;
+
+	var oHtml = new StringBuilder( '<table id="tableFiles" cellspacing="1" cellpadding="0" width="100%" border="0">' ) ;
+
+	// Add the Folders.
+	var oNodes ;
+	oNodes = fckXml.SelectNodes( 'Connector/Folders/Folder' ) ;
+	for ( var i = 0 ; i < oNodes.length ; i++ )
+	{
+		var sFolderName = oNodes[i].attributes.getNamedItem('name').value ;
+		//oHtml.Append( oListManager.GetFolderRowHtml( sFolderName, sCurrentFolderUrl +sCurrentFolderPath + sFolderName + "/" ) ) ;
+		oHtml.Append( oListManager.GetFolderRowHtml( sFolderName, sCurrentFolderPath + sFolderName + "/", sCurrentFolderUrl + sFolderName + "/" ) ) ;
+	}
+
+	// Add the Files.
+	oNodes = fckXml.SelectNodes( 'Connector/Files/File' ) ;
+	for ( var j = 0 ; j < oNodes.length ; j++ )
+	{
+		var oNode = oNodes[j] ;
+		var sFileName = oNode.attributes.getNamedItem('name').value ;
+		var sFileSize = oNode.attributes.getNamedItem('size').value ;
+
+		// Get the optional "url" attribute. If not available, build the url.
+		var oFileUrlAtt = oNodes[j].attributes.getNamedItem('url') ;
+		var sFileUrl = oFileUrlAtt != null ? oFileUrlAtt.value : sCurrentFolderUrl + sFileName ;
+
+		oHtml.Append( oListManager.GetFileRowHtml( sFileName, sFileUrl, sFileSize ) ) ;
+	}
+
+	oHtml.Append( '<\/table>' ) ;
+
+	document.body.innerHTML = oHtml.ToString();
+
+	window.top.document.title = 'FCKeditor - Resources Browser (' + ( ( ( new Date() ) - dTimer ) / 1000 ) + ' seconds)' ;
+}
+
+window.onload = function()
+{
+	window.top.IsLoadedResourcesList = true ;
+}
+
+// AJAX สำหรับลบไฟล์
+function int_java()
+{
+	try
+	{
+		return new ActiveXObject( "Msxml2.XMLHTTP" ); //IE
+	}
+	catch( e )
+	{
+	} 
+	try
+	{
+		return new ActiveXObject( "Microsoft.XMLHTTP" ); //IE
+	}
+	catch( e )
+	{
+	}
+	try
+	{
+		return new XMLHttpRequest(); //Native Javascript
+	}
+	catch( e )
+	{
+	}
+	alert( "XMLHttpRequest not supported" );
+	return null;
+};
+
+//ฟังก์ชั่นลบไฟล์
+function DeleteFile( id )
+{
+	if ( window.confirm( "คุณแน่ใจที่จะลบ File นี้ ?" ) )
+	{
+		var req = int_java()
+		req.onreadystatechange = function()
+		{
+			if ( req.readyState == 4 )
+			{
+				if ( req.status == 200 )
+				{
+					if ( req.responseText != '' )
+					{
+						alert( req.responseText );
+					}
+					else
+					{
+						window.parent.frames['frmResourcesList'].Refresh();
+					};
+				};
+			};
+		};
+		req.open( "POST" , "delete.php" , true );
+		req.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
+		req.send( "id=" + encodeURIComponent( id ) ); //ส่งค่า
+	};
+};
+
+//ฟังก์ชั่นลบไดเร็คทอรี่
+function DeleteDirectory ( fldrName , fldrUrl )
+{
+	if ( window.confirm( "คุณแน่ใจที่จะลบไดเร็คทอรี่ " + fldrName + "\nและไฟล์ทั้งหมดในไดเร็คทอรี่นี้" ) )
+	{
+		var req = int_java()
+		req.onreadystatechange = function()
+		{
+			if ( req.readyState == 4 )
+			{
+				if ( req.status == 200 )
+				{
+					if ( req.responseText != '' )
+					{
+						alert( req.responseText );
+					}
+					else
+					{
+						window.parent.frames['frmResourcesList'].Refresh();
+					};
+				};
+			};
+		};
+		req.open( "POST" , "delete.php" , true );
+		req.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
+		req.send( "dir=" + encodeURIComponent( fldrUrl ) ); //ส่งค่า
+	};
+}
+
+var thumbnails = new Array();
+
+//โหลดรูป thumbnail มาแสดง ถ้าเป็นรูปภาพ
+function dothumbnail( parent , img )
+{
+	var fs = img.split( '.' );
+	var ext = fs[fs.length - 1];
+	if ( ext == 'jpg' || ext == 'gif' || ext == 'jpeg' || ext == 'png' || ext == 'bmp' )
+	{
+		var imgurl = 'image.php?id=../../../../..' + img + '&w=100&h=100';
+		thumbnails[imgurl] = new Image();
+		thumbnails[imgurl].src = imgurl;
+		var thumb = document.getElementById( 'thumbnail' );
+		var divthumb = document.getElementById( 'divthumb' );
+		var left = getposOffset( parent , "left" );
+		var top = getposOffset( parent , "top" );
+		divthumb.style.top = top + 'px';
+		divthumb.style.left = left + parent.offsetWidth + 5 + 'px';
+		thumb.src = 'images/wait.gif';
+		document.getElementById( 'arrow' ).src = 'images/arrow-hidden.gif';
+		preload( parent , imgurl );
+		divthumb.style.display = 'block';
+	};
+};
+
+//ปรีโหลด
+function preload( parent , img )
+{
+	if ( thumbnails[img].complete )
+	{
+		var divthumb = document.getElementById( 'divthumb' );
+		var thumb = document.getElementById( 'thumbnail' );
+		var arrow = document.getElementById( 'arrow' );
+		arrow.src = 'images/arrow.gif';
+		thumb.src = img;
+		if ( parseInt( divthumb.style.top ) + thumbnails[img].height > document.body.clientHeight + document.body.scrollTop )
+		{
+			divthumb.style.top = getposOffset( parent , "top" ) - thumbnails[img].height + parent.offsetHeight + 'px';
+			arrow.style.top = thumbnails[img].height - 9 + 'px';
+		}
+		else
+		{
+			arrow.style.top = '4px';
+		};
+	}
+	else
+	{
+		setTimeout( function(){preload( parent , img )} , 30 );
+	};
+};
+
+function getposOffset( overlay , offsettype )
+{
+     var totaloffset = ( offsettype == "left" ) ? overlay.offsetLeft : overlay.offsetTop;
+     var parentEl = overlay.offsetParent;
+     while ( parentEl != null )
+	 {
+          totaloffset = ( offsettype == "left" ) ? totaloffset + parentEl.offsetLeft : totaloffset + parentEl.offsetTop;
+          parentEl = parentEl.offsetParent;
+     }
+     return totaloffset;
+};
+-->
+</script>
+</head>
+<body class="FileArea">
+</body>
+</html>
